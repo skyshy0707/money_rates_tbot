@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    command: uvicorn api.main:app --host 0.0.0.0
+    ports:
+      - 8081:8000
+    expose:
+      - 8000
+  bot:
+    restart: unless-stopped
+    build: .
+    command: python ./bot/main.py develop
+    depends_on:
+      - api
