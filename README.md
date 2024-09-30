@@ -1,6 +1,6 @@
 Приложение на Python 3.8 для автоматических сообщений о курсе доллара в чате 
-`money_rates_tbot`[https://t.me/currency_unit_rates_bot] по последним данным 
-api https://v6.exchangerate-api.com/v6
+[`money_rates_tbot`](https://t.me/currency_unit_rates_bot) по последним данным 
+[api](https://v6.exchangerate-api.com/v6)
 
 Позволяет в чате бота `money_rates_tbot` получать данные о текущем курсе доллара в 
 российских рублях.
@@ -21,7 +21,10 @@ api https://v6.exchangerate-api.com/v6
 ```
 
 
-!NB Настройки:
+**!NB Настройки:**
+
+
+*Настройки внешнего api, предоставляющий данные*
 
 При необходимости, в файле `/api/config.py` -- в переменной `exchange_rate_api.base_url` 
 вида https://v6.exchangerate-api.com/v6/API_KEY поменяйте `API_KEY` на свой*
@@ -30,8 +33,10 @@ api https://v6.exchangerate-api.com/v6
 [ExchangeRate-API](https://app.exchangerate-api.com/sign-up), используя свой email.
 
 
+*Настройки и создание телеграмм бота* 
+
 Создайте бота в телеграмм, используя [чат конструктора](https://t.me/BotFather)
-Получите токен доступа к боту через HTTP API
+Получите токен бота для доступа к нему через HTTP API
 Измените значение токена доступа бота `BOT_TOKEN` в `bot/congig.py`
 
 **Запуск проекта**
