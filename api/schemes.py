@@ -37,7 +37,7 @@ def erate_generator(target_unit):
 def erate_datacls_generator(target_unit):
     """
     Генерирует модель данных курса доллара по 
-    отноршению целевой денежной единице `target_unit`
+    отношению целевой денежной единице `target_unit`
     """
     datatype = erate_generator(target_unit)
     return create_model(
