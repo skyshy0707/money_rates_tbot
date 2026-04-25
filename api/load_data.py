@@ -38,9 +38,8 @@ async def get_middle_data(url: str, headers: dict=dict(), params: dict=dict()) -
                 json_data.update({ "error": "Number: Client Error" })
                 break
 
-            except aiohttp.ConnectionError:
+            except aiohttp.ConnectionTimeoutError:
                 await asyncio.sleep(18)
-                continue
             else:
                 break
     return json_data
