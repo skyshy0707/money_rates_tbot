@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Path, status
 
-from . import load_data, schemes
+from api import load_data, schemes
 
 async def lastest_rate_model_response(target_unit: str=Path(...)):
     return schemes.erate_datacls_generator(target_unit=target_unit)
@@ -20,7 +20,7 @@ class Router:
             status_code=status.HTTP_200_OK
         )
         async def get_lastest_rate(response_model=Depends(lastest_rate_model_response)):
-            return load_data.get_rate_api_data(response_model)
+            return await load_data.get_rate_api_data(response_model)
         
 
 weatherapi = Router()

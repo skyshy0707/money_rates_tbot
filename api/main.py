@@ -8,7 +8,7 @@ import locale
 locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 current_locale = locale.getlocale()
 
-from . import router
+from api import router
 
 
 origins = ["http://localhost:8081", "http://127.0.0.1:8081", "*"]

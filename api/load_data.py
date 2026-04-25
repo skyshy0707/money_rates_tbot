@@ -1,13 +1,16 @@
 """
 Модуль для загрузки данных
 """
+import aiohttp
+import asyncio
+import json
+
 from fastapi import status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-import requests
 
-from . import config
+from api import config
 
 
 ERROR_EXTERNAL_API_RESPONSE = JSONResponse(
@@ -15,27 +18,35 @@ ERROR_EXTERNAL_API_RESPONSE = JSONResponse(
     content=jsonable_encoder({ "error": "Невозможно получить данные по этому запросу."})
 )
 
-def get_middle_data(url: str, headers: dict=dict(), params: dict=dict()) -> dict:
+async def get_middle_data(url: str, headers: dict=dict(), params: dict=dict()) -> dict:
     """
     Метод, получающий json-данные из внешнего api 
     с учётом обработки возможных исключений
     """
-    json = {}
-    while True:
-        try:
-            response = requests.get(url, headers=headers, params=params)
-        except requests.ConnectionError:
-            continue
-        else:
-            break
-    try:
-        json = response.json()
-    except requests.JSONDecodeError as e:
-        json.update({ "error": f"Number: {e.errno if e.errno else 'Unknown number'} - {response.reason}" })
-    return json
+    json_data = {}
+
+    async with aiohttp.ClientSession() as session:
+        while True:
+            try:
+                async with session.get(url, headers=headers, params=params) as response:
+                    try:
+                        json_data = await response.json()
+                    except json.JSONDecoderError as e:
+                        json_data.update({ "error": f"Number: {e.errno if e.errno else 'Unknown number'} - {response.reason}" })
+                        break
+            except aiohttp.ClientError as e:
+                json_data.update({ "error": "Number: Client Error" })
+                break
+
+            except aiohttp.ConnectionError:
+                await asyncio.sleep(18)
+                continue
+            else:
+                break
+    return json_data
 
 
-def get_rate_api_data(response_model: BaseModel) -> dict:
+async def get_rate_api_data(response_model: BaseModel) -> dict:
     """
     Метод отправляет запрос пользователя на внешний адрес api 
     курсов валют https://v6.exchangerate-api.com//latest/USD
@@ -44,7 +55,7 @@ def get_rate_api_data(response_model: BaseModel) -> dict:
     в случае ошибки.
     """
 
-    exchange_rate_data = get_middle_data(
+    exchange_rate_data = await get_middle_data(
         config.exchange_rate_api.latest_usd,
     )
 
